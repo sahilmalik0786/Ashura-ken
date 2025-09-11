@@ -15,7 +15,7 @@ const Chats = () => {
   const [status, setStatus] = useState("ready");
   // console.log(mutationCache)
   useEffect(() => {
-    const socketio = io("http://localhost:3000", {
+    const socketio = io(import.meta.env.VITE_API_URL, {
       withCredentials: true,
     });
 
