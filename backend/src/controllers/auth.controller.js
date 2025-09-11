@@ -1,10 +1,11 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 import { userModel } from '../models/user.model.js'
+import { connectToDb } from '../db/db.js'
 
 export const registerController = async(req, res)=>{
     const {username , email , password} = req.body
-
+     await connectToDb()
     const isUserExists = await userModel.findOne({
         $or:[
             {username:username},
@@ -44,7 +45,7 @@ export const registerController = async(req, res)=>{
 
 export const loginController = async(req,res)=>{
     const {userCredential , password} = req.body 
-     
+     await connectToDb()
     const user = await userModel.findOne({
         $or:[
             {username:userCredential},

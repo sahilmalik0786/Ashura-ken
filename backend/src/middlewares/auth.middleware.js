@@ -3,7 +3,8 @@ import { userModel } from '../models/user.model.js'
 
 const authmiddleware = async(req,res,next)=>{
     const token = req.cookies.token
-    console.log(token)
+    await connectToDb()
+    
     if(!token){
         return res.status(401).json({
             message:"Invalid token or token not found"
