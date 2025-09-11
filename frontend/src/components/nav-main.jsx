@@ -9,39 +9,62 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useLoaderData, useNavigate } from "react-router";
-import { useChatId } from "@/hooks/useChatId";
-import { queryClient } from "@/queryClient";
-import { BookText, ChevronRight } from "lucide-react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useNavigate } from "react-router";
 
-export function NavMain({ items, create ,itm }) {
+import { ChevronRight } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "./ui/collapsible";
+
+export function NavMain({ items, create, itm }) {
   const navigate = useNavigate();
-  const chatId = useChatId();
-  const isMobile = useIsMobile()
-  const {setOpen , open , openMobile , setOpenMobile} = useSidebar()
-  console.log(openMobile)
+
+  const { openMobile, setOpenMobile } = useSidebar();
+
   const handleCreateChat = async () => {
-   if(openMobile){
-     navigate('/dashboard/newchat')
-     setTimeout(()=>{
-       setOpenMobile(open=>!open)
-     }, 150)
-   }
-   else{
-    navigate('/dashboard/newchat')
-   }
+    if (openMobile) {
+      navigate("/dashboard/newchat");
+      setTimeout(() => {
+        setOpenMobile((open) => !open);
+      }, 150);
+    } else {
+      navigate("/dashboard/newchat");
+    }
   };
+  const handlePromptsNav = (itemUrl) => {
+    if (openMobile) {
+      navigate(itemUrl);
+      setTimeout(() => {
+        setOpenMobile((open) => !open);
+      }, 150);
+    } else {
+      navigate(itemUrl);
+    }
+  };
+
+  const handleHomeNav = ()=>{
+    if(openMobile){
+      navigate('/dashboard')
+      setTimeout(()=>{
+        setOpenMobile(open=>!open)
+      } ,150)
+    } else {
+      navigate('/dashboard')
+    }
+  }
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
-          <SidebarMenuItem onClick={() => navigate('/dashboard')} key={item.title}>
+          <SidebarMenuItem
+            onClick={handleHomeNav}
+            key={item.title}
+          >
             <SidebarMenuButton className="cursor-pointer" tooltip={item.title}>
               {item.icon && <item.icon />}
               <span>{item.title}</span>
@@ -55,19 +78,16 @@ export function NavMain({ items, create ,itm }) {
               <span>{item.title}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
-          
         ))}
-         {itm.map((itm) => (
-           <Collapsible
+        {itm.map((itm) => (
+          <Collapsible
             key={itm.title}
             asChild
             defaultOpen={itm.isActive}
             className="group/collapsible"
           >
-        <SidebarMenuItem >
-          {/* <SidebarMenuButton className={'cursor-pointer'}> */}
-       
-            <CollapsibleTrigger asChild>
+            <SidebarMenuItem>
+              <CollapsibleTrigger asChild>
                 <SidebarMenuButton tooltip={itm.title}>
                   {itm.icon && <itm.icon />}
                   <span>{itm.title}</span>
@@ -79,31 +99,21 @@ export function NavMain({ items, create ,itm }) {
                   {itm.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
-                          
-                          <span onClick={()=>navigate(subItem.url)}>{subItem.title}</span>
-                          
+                        <span onClick={() => handlePromptsNav(subItem.url)}>
+                          {subItem.title}
+                        </span>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}
                 </SidebarMenuSub>
               </CollapsibleContent>
             </SidebarMenuItem>
-           </Collapsible>
-         ))}
-          {/* </SidebarMenuButton> */}
+          </Collapsible>
+        ))}
+        {/* </SidebarMenuButton> */}
         {/* </SidebarMenuItem> */}
       </SidebarMenu>
     </SidebarGroup>
   );
 }
 
-//       try {
-//       const chatID =  await chatId.mutateAsync(); // calls backend
-
-//   // await queryClient.invalidateQueries();
-
-//       await queryClient.invalidateQueries({ queryKey: ["chats"] })
-//       navigate(`/dashboard/chat/${chatID?.id}`); // redirect after success
-// } catch (err) {
-//   console.error("chat Id not generated:", err);
-// }
