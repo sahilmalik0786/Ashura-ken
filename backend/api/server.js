@@ -10,7 +10,7 @@ const httpServer = createServer(app)
 connectToDb()
 initSocket(httpServer)
 
-
+export default app
 
 
 // httpServer.listen(3000, ()=>{
