@@ -27,7 +27,8 @@ export function RegisterForm({
           // calls backend
          navigate('/dashboard'); // redirect after success
       } catch (err) {
-        toast.error(err?.response?.data?.message || err)
+        toast.error(err?.response?.data?.message || register.isError && 'server error')
+        
         console.error("Login failed:", err);
       }
     }
