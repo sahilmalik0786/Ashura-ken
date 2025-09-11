@@ -3,8 +3,8 @@ import MessageArea from "../MessageArea";
 import InputArea from "../PromptInput";
 import { io } from "socket.io-client";
 import { useUserMessages } from "@/hooks/useUserMessages";
-import { useLoaderData, useParams } from "react-router";
-import { queryClient } from "@/queryClient";
+import {  useParams } from "react-router";
+
 import { Loader } from "../ui/shadcn-io/ai/loader";
 
 const Chats = () => {
