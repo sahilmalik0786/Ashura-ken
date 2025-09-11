@@ -84,7 +84,7 @@ export const initSocket = (httpServer) => {
         const response = await generateChat([...ltm, ...stm]);
 
         socket.emit("ai-message-response", {
-          role:'ai',
+          role:'model',
           content: response,
           chat: messagePayload?.chatID,
         });
