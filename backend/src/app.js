@@ -24,7 +24,11 @@ app.use(express.urlencoded())
 app.use('/api/auth' , authRoutes)
 app.use('/api/chat' , chatRoutes)
 app.use('/api/prompt' , promptRoutes)
-
+app.get('/' , (req,res)=>{
+    res.json({
+        message:'runnig'
+    })
+})
 
 
 export default app
