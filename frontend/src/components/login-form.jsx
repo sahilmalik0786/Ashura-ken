@@ -31,7 +31,7 @@ export function LoginForm({ className, ...props }) {
        await login.mutateAsync(data); // calls backend
        navigate('/dashboard'); // redirect after success
     } catch (err) {
-             toast.error(err?.response?.data?.message || register.isError && 'server error')
+             toast.error(err?.response?.data?.message || login.isError && 'server error')
      
       
       console.error("Login failed:", err);
