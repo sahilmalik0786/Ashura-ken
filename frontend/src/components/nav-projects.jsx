@@ -49,7 +49,7 @@ export function NavProjects({ history, selected, setSelected }) {
         ) : (
           history.map((item) => {
             return (
-              <SidebarMenuItem>
+              <SidebarMenuItem key={item._id}>
                 <SidebarMenuButton
                   className={`${
                     item._id == id &&

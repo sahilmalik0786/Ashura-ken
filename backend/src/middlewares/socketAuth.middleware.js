@@ -1,11 +1,11 @@
 import cookie from 'cookie'
 import jwt from 'jsonwebtoken'
 import { userModel } from '../models/user.model.js'
-import { connectToDb } from '../db/db.js'
+
 
 export const  socektAuth = async(socket,next) =>{
     const cookies = cookie.parse(socket.handshake.headers?.cookie || "")
-    await connectToDb()
+   
     if(!cookies.token){
         next(new Error('Authentication error : NO TOKEN PROVIDED'))
     }

@@ -1,11 +1,11 @@
 import { chatModel } from "../models/chat.model.js"
 import messageModel from "../models/message.model.js"
-import {connectToDb} from '../db/db.js'
+
 
 export const chatController = async(req,res) =>{
             const {message} = req.body
             // console.log(req.body)
-            await connectToDb()
+          
             const user = req.user
             const chat = await chatModel.create({
                 
@@ -26,7 +26,7 @@ export const chatController = async(req,res) =>{
 
 export const userChatsController = async (req, res)=>{
     const user = req.user
-    await connectToDb()
+
     const chats = await chatModel.find({
         user:user._id
     })
@@ -45,7 +45,7 @@ export const userChatsController = async (req, res)=>{
 
 export const chatsHistoryController = async (req,res)=>{
     const {id}  = req.body
-    await connectToDb()
+   
     if(!id){
         return res.status(401).json({
             message:'there is no chat id to begin with'

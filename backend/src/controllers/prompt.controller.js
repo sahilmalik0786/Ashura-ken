@@ -1,10 +1,10 @@
 import promptModel from "../models/prompt.model.js";
 import { generateTags } from "../services/ai.service.js";
-import { connectToDb } from "../db/db.js";
+
 export const savePromptController = async (req, res) => {
   const user = req.user;
   const { prompt } = req.body;
-  await connectToDb()
+ 
 
   const generatedtags = await generateTags(prompt);
 
@@ -26,7 +26,7 @@ export const savePromptController = async (req, res) => {
 
 export const getPromptsController = async (req, res) => {
   const user = req.user;
-  await connectToDb()
+  
   const prompts = await promptModel.find({
     user: user._id,
   });
@@ -42,7 +42,7 @@ export const getPromptsController = async (req, res) => {
 };
 
 export const getCommunityPrompt = async (req, res) => {
-  await connectToDb()
+  
   const communityPrompts = await promptModel.find({ isPublic: true });
 
   
@@ -55,7 +55,7 @@ export const getCommunityPrompt = async (req, res) => {
 export const searchPromptsController = async (req, res) => {
   try {
     const { tag } = req.params;
-    await connectToDb()
+ 
 
     const prompts = await promptModel.find({ tags: tag.toLowerCase() });
     if (!prompts || prompts.length === 0) {
