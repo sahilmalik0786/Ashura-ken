@@ -1,16 +1,21 @@
 import { Server } from "socket.io";
 import { socektAuth } from "../middlewares/socketAuth.middleware.js";
-import { generateChat, generateEmbedding } from "../services/ai.service.js";
+import {
+  generateChat,
+  generateEmbedding,
+  generateTitle,
+} from "../services/ai.service.js";
 import messageModel from "../models/message.model.js";
 import { createMemory, queryMemory } from "../services/vector.service.js";
+import { chatModel } from "../models/chat.model.js";
 
 export const initSocket = (httpServer) => {
   const io = new Server(httpServer, {
-    cors:{
+    cors: {
       origin: process.env.FRONTEND_URL || "http://localhost:5173",
-       allowedHeaders: [ "Content-Type", "Authorization" ],
-      credentials:true
-    }
+      allowedHeaders: ["Content-Type", "Authorization"],
+      credentials: true,
+    },
   });
   io.use(socektAuth);
 
@@ -31,14 +36,14 @@ export const initSocket = (httpServer) => {
         generateEmbedding(messagePayload.content),
       ]);
       await createMemory({
-          vectors,
-          messageId: message._id,
-          metadata: {
-            chat: messagePayload?.chatID,
-            user: socket?.user?._id,
-            text: messagePayload?.content,
-          },
-        });
+        vectors,
+        messageId: message._id,
+        metadata: {
+          chat: messagePayload?.chatID,
+          user: socket?.user?._id,
+          text: messagePayload?.content,
+        },
+      });
       try {
         const [memory, chatHistory] = await Promise.all([
           queryMemory({
@@ -54,9 +59,8 @@ export const initSocket = (httpServer) => {
             .sort({ createdAt: -1 })
             .limit(10)
             .lean()
-            .then(msgs=> msgs.reverse())
+            .then((msgs) => msgs.reverse()),
         ]);
-      
 
         const stm = chatHistory.map((items) => {
           return {
@@ -84,10 +88,37 @@ export const initSocket = (httpServer) => {
         const response = await generateChat([...ltm, ...stm]);
 
         socket.emit("ai-message-response", {
-          role:'model',
+          role: "model",
           content: response,
           chat: messagePayload?.chatID,
         });
+
+        const currentChat = await chatModel
+          .findOne({
+            _id: messagePayload.chatID,
+          })
+          .lean();
+
+        if(!currentChat.title) {
+          console.log('jeoo')
+          // context is format for the llm to understand
+          const context = [
+            { role: "user", 
+              parts: [{ text: messagePayload?.content }]
+            },
+            {
+              role: "model",
+              parts: [{ text: response }],
+            },
+          ];
+          const ChatTitle = await generateTitle(context);
+           await chatModel.updateOne({_id:messagePayload?.chatID},
+            {
+              title:ChatTitle
+            }
+          )
+          socket.emit('chatTitle')
+        }
 
         const [responseMessage, responseVectors] = await Promise.all([
           messageModel.create({

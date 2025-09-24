@@ -4,7 +4,7 @@ import InputArea from "../PromptInput";
 import { io } from "socket.io-client";
 import { useUserMessages } from "@/hooks/useUserMessages";
 import {  useParams } from "react-router";
-
+import { queryClient } from "@/queryClient";
 import { Loader } from "../ui/shadcn-io/ai/loader";
 
 const Chats = () => {
@@ -13,6 +13,7 @@ const Chats = () => {
   const [socket, setSocket] = useState();
   const [draft, setDraft] = useState(true);
   const [status, setStatus] = useState("ready");
+  
   // console.log(mutationCache)
   useEffect(() => {
     const socketio = io(import.meta.env.VITE_API_URL, {
@@ -29,7 +30,10 @@ const Chats = () => {
       ]);
       setStatus("ready");
     });
-
+    socketio.on('chatTitle' , ()=>{
+      queryClient.invalidateQueries(['chats'])
+      console.log('hhh')
+    })
     setSocket(socketio);
 
     return () => {

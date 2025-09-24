@@ -27,8 +27,6 @@ export default function DashboardComp() {
        location.pathname=='/dashboard/prompt/save' && setBreadValue('Save Prompts')
        location.pathname=='/dashboard/prompt/explore' && setBreadValue('Explore')
        location.pathname=='/dashboard/prompt' && setBreadValue('Your Prompts')
-
-
   },[location])
   
   return (

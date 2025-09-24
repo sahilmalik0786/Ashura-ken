@@ -1,17 +1,8 @@
-import { Folder, Forward, MoreHorizontal, Trash2 } from "lucide-react";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
@@ -19,17 +10,16 @@ import {
 import { useNavigate, useParams } from "react-router";
 
 
-export function NavProjects({ history, selected, setSelected }) {
+export function NavProjects({ history }) {
  
   const navigate = useNavigate();
   const { openMobile , setOpenMobile} = useSidebar()
-
+  
   
 
   const handleChatNav = (chatid) => {
     if (openMobile) {
       navigate(`/dashboard/chat/${chatid}`);
-
       setTimeout(() => {
         setOpenMobile((open) => !open);
       }, 150);
@@ -53,12 +43,13 @@ export function NavProjects({ history, selected, setSelected }) {
                 <SidebarMenuButton
                   className={`${
                     item._id == id &&
-                    "bg-accent-foreground text-accent hover:bg-accent-foreground hover:text-accent"
+                    "bg-accent-foreground text-accent hover:bg-accent-foreground hover:text-accent "
                   } cursor-pointer`}
                   asChild
                   onClick={() => handleChatNav(item._id)}
                 >
-                  <span>{item.title}</span>
+                  
+                  <span className="text-ellipsis  py-5">{item.title == undefined ? <div className="w-full h-7 rounded-lg p-1 bg-black animate-pulse"></div> : item.title}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             );

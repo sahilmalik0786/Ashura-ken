@@ -10,10 +10,8 @@ const Explorer = () => {
 
 
   const onSubmit = async (data) => {
-     const value = data?.tag
-     
+     const value = data?.tag    
      setTag(value.trim())
-     
   };
 
   const handleKeyDown = (e) => {
